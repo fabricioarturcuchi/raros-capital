@@ -10,6 +10,7 @@
     background: #000;
     color: #fff;
     margin: 0; padding: 0;
+    padding-bottom: 80px; /* espaço para rodapé */
   }
   header {
     background: #b38b00;
@@ -105,6 +106,41 @@
   #dadosPdf input {
     margin-bottom: 20px;
   }
+
+  /* ===== RODAPÉ ===== */
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    background: #222;
+    padding: 12px 20px;
+    box-shadow: 0 -2px 8px #b38b00cc;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  footer.hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  footer button {
+    background: #b38b00;
+    color: #000;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 14px;
+    min-width: 160px;
+  }
+  footer button:hover {
+    background: #d2af00;
+  }
 </style>
 </head>
 <body>
@@ -147,8 +183,17 @@
   </section>
 </main>
 
+<!-- RODAPÉ COM BOTÕES -->
+<footer id="footer">
+  <button onclick="window.open('https://bocamafrapremium.com.br/', '_blank')">Site Administradora</button>
+  <button onclick="window.open('https://www.raroscapital.com.br/', '_blank')">Site Raros Capital</button>
+  <button onclick="window.open('https://api.whatsapp.com/send?phone=5549933816445&text=Olá!%20Gostaria%20de%20falar%20com%20um%20consultor.', '_blank')">Contato Consultor Fabricio</button>
+  <button onclick="window.open('https://api.whatsapp.com/send?phone=5549920038602&text=Olá!%20Gostaria%20de%20falar%20com%20um%20consultor.', '_blank')">Contato Consultora Gabriele</button>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
+  // Funções do simulador mantidas do código anterior (não modifiquei aqui, só para foco no rodapé)
   const bemSelect = document.getElementById('bem');
   const valorInput = document.getElementById('valor');
   const infoParcelas = document.getElementById('info-parcelas');
@@ -169,7 +214,6 @@
   let bemSelecionado = "";
   let numProposta = "";
 
-  // Ajusta inputs e informações quando seleciona o bem
   bemSelect.addEventListener('change', () => {
     bemSelecionado = bemSelect.value;
     resumoSimulacao.textContent = "";
@@ -204,14 +248,9 @@
     valorInput.disabled = false;
   });
 
-  // Ativa botão simular somente se valor dentro do intervalo
   valorInput.addEventListener('input', () => {
     const val = Number(valorInput.value);
-    if (val >= minValor && val <= maxValor) {
-      btnSimular.disabled = false;
-    } else {
-      btnSimular.disabled = true;
-    }
+    btnSimular.disabled = !(val >= minValor && val <= maxValor);
   });
 
   btnSimular.addEventListener('click', () => {
@@ -221,10 +260,8 @@
       return;
     }
 
-    // Geração da proposta (número aleatório Pxxxxxx)
     numProposta = 'P' + Math.floor(100000 + Math.random() * 900000);
 
-    // Cálculo valores da simulação
     const valorTaxa = valorSimulado * taxa;
     const valorTotal = valorSimulado + valorTaxa;
     const valorParcela = valorTotal / maxParcelas;
@@ -239,7 +276,6 @@
       <strong>Valor aproximado da parcela:</strong> ${valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
     `;
 
-    // Mostrar campos para dados do cliente
     dadosPdfSection.style.display = "block";
     btnPdf.disabled = false;
   });
@@ -254,11 +290,9 @@
       return;
     }
 
-    // Gerar PDF
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Logo
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = 'https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png';
@@ -293,6 +327,22 @@
     img.onerror = () => {
       alert("Erro ao carregar a logo para o PDF.");
     };
+  });
+
+  // Código para ocultar e mostrar o rodapé ao rolar a página
+  const footer = document.getElementById('footer');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    if (currentScroll > lastScroll && currentScroll > 100) {
+      // Rolando para baixo, oculta rodapé
+      footer.classList.add('hidden');
+    } else {
+      // Rolando para cima, mostra rodapé
+      footer.classList.remove('hidden');
+    }
+    lastScroll = currentScroll <= 0 ? 0 : currentScroll; // evita negativo
   });
 </script>
 
