@@ -1,389 +1,246 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Raros Capital - Venda de Consórcios</title>
-<style>
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #000;
-    color: #fff;
-    margin: 0; padding: 0;
-    padding-bottom: 80px; /* espaço para rodapé */
-  }
-  header {
-    background: #b38b00;
-    padding: 20px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 28px;
-    letter-spacing: 2px;
-    color: #fff;
-  }
-  header img {
-    height: 50px;
-    vertical-align: middle;
-    margin-right: 12px;
-  }
-  main {
-    max-width: 720px;
-    margin: 30px auto;
-    background: #111;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 20px #b38b00aa;
-  }
-  h2 {
-    color: #b38b00;
-    border-bottom: 2px solid #b38b00;
-    padding-bottom: 6px;
-    margin-bottom: 20px;
-  }
-  label {
-    display: block;
-    margin-top: 15px;
-    font-weight: 600;
-    font-size: 15px;
-  }
-  select, input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
-    width: 100%;
-    padding: 10px 12px;
-    margin-top: 6px;
-    border-radius: 4px;
-    border: none;
-    font-size: 16px;
-    font-weight: 600;
-    background: #222;
-    color: #fff;
-    box-sizing: border-box;
-  }
-  input[type="number"]::-webkit-inner-spin-button, 
-  input[type="number"]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
-    margin: 0; 
-  }
-  input::placeholder {
-    color: #aaa;
-  }
-  button {
-    margin-top: 24px;
-    background: #b38b00;
-    border: none;
-    color: #000;
-    font-weight: 700;
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  button:hover {
-    background: #d2af00;
-  }
-  .info-text {
-    font-size: 14px;
-    margin-top: 8px;
-    color: #ccc;
-  }
-  #resumoSimulacao {
-    margin-top: 30px;
-    background: #222;
-    padding: 18px 20px;
-    border-radius: 6px;
-    line-height: 1.5em;
-    font-weight: 600;
-    color: #f0e68c;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Raros Capital - Consórcios</title>
 
-  /* Campos para dados do cliente PDF - ocultos inicialmente */
-  #dadosPdf {
-    margin-top: 40px;
-    padding-top: 20px;
-    border-top: 2px solid #b38b00;
-    display: none;
-  }
-  #dadosPdf input {
-    margin-bottom: 20px;
-  }
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XFQ7KMD7XB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-XFQ7KMD7XB');
+  </script>
 
-  /* ===== RODAPÉ ===== */
-  footer {
-    position: fixed;
-    bottom: 0;
-    left: 0; right: 0;
-    background: #222;
-    padding: 12px 20px;
-    box-shadow: 0 -2px 8px #b38b00cc;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    z-index: 1000;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
-  footer.hidden {
-    transform: translateY(100%);
-    opacity: 0;
-    pointer-events: none;
-  }
-  footer button {
-    background: #b38b00;
-    color: #000;
-    font-weight: 700;
-    padding: 10px 18px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    font-size: 14px;
-    min-width: 160px;
-  }
-  footer button:hover {
-    background: #d2af00;
-  }
-</style>
+  <style>
+    /* ...mesmo estilo que antes, para não ficar repetitivo, copie da versão anterior */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0d0d0d;
+      color: #ffffff;
+    }
+    header {
+      background: #0d0d0d;
+      color: #d4af37;
+      text-align: center;
+      padding: 20px;
+      border-bottom: 2px solid #d4af37;
+    }
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      background: #1a1a1a;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #d4af37;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      color: #ccc;
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .feature-card {
+      background: #ffffff;
+      color: #0d0d0d;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      flex: 1 1 280px;
+      text-align: center;
+    }
+    .feature-card h3 {
+      color: #d4af37;
+      margin-bottom: 10px;
+    }
+    .contact {
+      background: #1a1a1a;
+      padding: 30px 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .contact h3 {
+      text-align: center;
+      color: #d4af37;
+      margin-bottom: 20px;
+    }
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    form input, form select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    form button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: #d4af37;
+      color: #0d0d0d;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    form button:hover {
+      background: #c49b2e;
+    }
+    .cta-button {
+      display: inline-block;
+      padding: 14px 30px;
+      background: linear-gradient(135deg, #d4af37, #c49b2e);
+      color: #0d0d0d;
+      font-weight: bold;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      margin: 30px auto;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+      position: relative;
+    }
+    .cta-button::after {
+      content: "✨";
+      position: absolute;
+      right: 15px;
+      top: 12px;
+      animation: pulse 1.8s infinite ease-in-out;
+    }
+    .cta-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px rgba(212, 175, 55, 0.8);
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+    .whatsapp-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .whatsapp-link a {
+      color: #25d366;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    footer {
+      background: #0d0d0d;
+      color: #aaa;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.9rem;
+      border-top: 2px solid #d4af37;
+    }
+    @media (max-width: 600px) {
+      .features {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <header>
-  <img src="https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png" alt="Logo Raros Capital" />
-  Raros Capital - Consórcios
+  <h1>Raros Capital</h1>
 </header>
 
-<main>
-  <h2>Simulador de Consórcios</h2>
-  <p class="info-text">
-    <strong>Automóveis:</strong> Valor de R$65.000,00 até R$130.000,00 - até 84 parcelas - Taxa de administração 16%.<br />
-    <strong>Imóveis:</strong> Valor de R$200.000,00 até R$500.000,00 - até 220 parcelas - Taxa de administração 22%.
-  </p>
+<section class="hero">
+  <h2>Consórcios Inteligentes</h2>
+  <p>Conquiste seu imóvel, carro ou serviço com planejamento e exclusividade. Sem juros. Sem burocracia.</p>
+</section>
 
-  <label for="bem">Selecione o bem desejado:</label>
-  <select id="bem">
-    <option value="" disabled selected>-- Escolha Automóvel ou Imóvel --</option>
-    <option value="automovel">Automóvel</option>
-    <option value="imovel">Imóvel</option>
-  </select>
+<section class="features">
+  <div class="feature-card">
+    <h3>✔ Sem Juros</h3>
+    <p>Pagamentos justos, sem os altos juros dos financiamentos.</p>
+  </div>
+  <div class="feature-card">
+    <h3>💼 Parcelas Flexíveis</h3>
+    <p>Planos sob medida para seu orçamento e metas.</p>
+  </div>
+  <div class="feature-card">
+    <h3>🤝 Suporte Premium</h3>
+    <p>Acompanhamento consultivo do início ao fim.</p>
+  </div>
+</section>
 
-  <label for="valor">Informe o valor desejado (em R$):</label>
-  <input id="valor" type="number" min="0" placeholder="Ex: 80000" disabled />
+<section class="contact" id="contato">
+  <h3>Solicite sua Simulação</h3>
+  <form action="https://formsubmit.co/fabricio@raroscapital.com.br" method="POST">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_subject" value="Novo Lead - Raros Capital">
+    <input type="hidden" name="_template" value="box">
+    <input type="hidden" name="_next" value="https://fabricioarturcuchi.github.io/site-consorcio/obrigado.html">
 
-  <p class="info-text" id="info-parcelas"></p>
+    <label for="nome">Nome completo *</label>
+    <input type="text" id="nome" name="Nome" required />
 
-  <button id="btnSimular" disabled>Gerar proposta</button>
+    <label for="telefone">Telefone *</label>
+    <input type="tel" id="telefone" name="Telefone" required placeholder="(XX) XXXXX-XXXX" />
 
-  <section id="resumoSimulacao" aria-live="polite"></section>
+    <label for="email">E-mail *</label>
+    <input type="email" id="email" name="Email" required />
 
-  <!-- Dados para gerar PDF ficam ocultos até simulação -->
-  <section id="dadosPdf" aria-label="Dados para gerar PDF">
-    <h3>Preencha os dados para baixar o PDF</h3>
-    <input id="nomePdf" type="text" placeholder="Nome completo" aria-label="Nome completo" />
-    <input id="telPdf" type="tel" placeholder="Número de telefone" aria-label="Número de telefone" />
-    <input id="emailPdf" type="email" placeholder="Digite seu e-mail" aria-label="Email" />
-    <button id="btnPdf" disabled>Gerar PDF da Proposta</button>
-  </section>
-</main>
+    <label for="tipoConsorcio">Tipo de Consórcio *</label>
+    <select id="tipoConsorcio" name="Tipo de Consórcio" required>
+      <option value="">Selecione</option>
+      <option value="Imóvel">Imóvel</option>
+      <option value="Veículo">Veículo</option>
+      <option value="Serviço">Serviço</option>
+      <option value="Outros">Outros</option>
+    </select>
 
-<!-- RODAPÉ COM BOTÕES -->
-<footer id="footer">
-  <button onclick="window.open('https://bocamafrapremium.com.br/', '_blank')">Site Administradora</button>
-  <button onclick="window.open('https://www.raroscapital.com.br/', '_blank')">Site Raros Capital</button>
-  <button onclick="window.open('https://api.whatsapp.com/send?phone=5549933816445&text=Olá!%20Gostaria%20de%20falar%20com%20um%20consultor.', '_blank')">Contato Consultor Fabricio</button>
-  <button onclick="window.open('https://api.whatsapp.com/send?phone=5549920038602&text=Olá!%20Gostaria%20de%20falar%20com%20um%20consultor.', '_blank')">Contato Consultora Gabriele</button>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <!-- Botão com animação -->
+  <div style="text-align: center; margin-top: 30px;">
+    <a href="https://fabricioarturcuchi.github.io/raros-capital/" target="_blank" class="cta-button" id="btnSimularConsorcio">
+      🧮 Simular Consórcio
+    </a>
+  </div>
+
+  <div class="whatsapp-link">
+    <a href="https://wa.me/5549933816445?text=Olá!%20Tenho%20interesse%20em%20uma%20simulação%20de%20consórcio%20com%20a%20Raros%20Capital" target="_blank">
+      💬 Fale com um consultor via WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer>
+  &copy; 2025 Raros Capital — Todos os direitos reservados.
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
-  const bemSelect = document.getElementById('bem');
-  const valorInput = document.getElementById('valor');
-  const infoParcelas = document.getElementById('info-parcelas');
-  const btnSimular = document.getElementById('btnSimular');
-  const resumoSimulacao = document.getElementById('resumoSimulacao');
-
-  const dadosPdfSection = document.getElementById('dadosPdf');
-  const nomePdf = document.getElementById('nomePdf');
-  const telPdf = document.getElementById('telPdf');
-  const emailPdf = document.getElementById('emailPdf');
-  const btnPdf = document.getElementById('btnPdf');
-
-  let taxa = 0;
-  let maxParcelas = 0;
-  let minValor = 0;
-  let maxValor = 0;
-  let valorSimulado = 0;
-  let bemSelecionado = "";
-  let numProposta = "";
-
-  bemSelect.addEventListener('change', () => {
-    bemSelecionado = bemSelect.value;
-    resumoSimulacao.textContent = "";
-    dadosPdfSection.style.display = "none";
-    nomePdf.value = telPdf.value = emailPdf.value = "";
-    btnPdf.disabled = true;
-    valorInput.value = "";
-    btnSimular.disabled = true;
-
-    if(bemSelecionado === 'automovel') {
-      minValor = 65000;
-      maxValor = 130000;
-      maxParcelas = 84;
-      taxa = 0.16;
-      infoParcelas.textContent = "Parcelas: até 84 - Taxa de administração: 16% - Valores entre R$65.000,00 e R$130.000,00";
-      valorInput.placeholder = `Informe valor entre ${minValor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} e ${maxValor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
-    } else if (bemSelecionado === 'imovel') {
-      minValor = 200000;
-      maxValor = 500000;
-      maxParcelas = 220;
-      taxa = 0.22;
-      infoParcelas.textContent = "Parcelas: até 220 - Taxa de administração: 22% - Valores entre R$200.000,00 e R$500.000,00";
-      valorInput.placeholder = `Informe valor entre ${minValor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})} e ${maxValor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`;
-    } else {
-      infoParcelas.textContent = "";
-      valorInput.placeholder = "";
-      valorInput.disabled = true;
-      btnSimular.disabled = true;
-      return;
-    }
-
-    valorInput.disabled = false;
-  });
-
-  valorInput.addEventListener('input', () => {
-    const val = Number(valorInput.value);
-    btnSimular.disabled = !(val >= minValor && val <= maxValor);
-  });
-
-  btnSimular.addEventListener('click', () => {
-    valorSimulado = Number(valorInput.value);
-    if (valorSimulado < minValor || valorSimulado > maxValor) {
-      alert(`Informe um valor entre ${minValor} e ${maxValor}`);
-      return;
-    }
-
-    numProposta = 'P' + Math.floor(100000 + Math.random() * 900000);
-
-    const valorTaxa = valorSimulado * taxa;
-    const valorTotal = valorSimulado + valorTaxa;
-    const valorParcela = valorTotal / maxParcelas;
-
-    resumoSimulacao.innerHTML = `<strong>Gerando proposta para:</strong> ${bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1)} no valor de ${valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}.<br/>Preencha seus dados para baixar a proposta em PDF.`;
-
-    // Mostrar formulário para dados do PDF
-    dadosPdfSection.style.display = "block";
-
-    btnPdf.disabled = true;
-    nomePdf.value = telPdf.value = emailPdf.value = "";
-  });
-
-  // Habilita o botão PDF só se todos os dados estiverem preenchidos
-  [nomePdf, telPdf, emailPdf].forEach(input => {
-    input.addEventListener('input', () => {
-      btnPdf.disabled = !(nomePdf.value.trim() && telPdf.value.trim() && emailPdf.value.trim());
+  document.getElementById('btnSimularConsorcio').addEventListener('click', function() {
+    gtag('event', 'click', {
+      'event_category': 'botao',
+      'event_label': 'Simular Consórcio',
+      'value': 1
     });
   });
-
-  btnPdf.addEventListener('click', () => {
-    gerarPdf();
-  });
-
-  async function gerarPdf() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    // Logo para o PDF
-    const logoUrl = "https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png";
-
-    // Carregar imagem antes de gerar PDF para evitar problemas
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = logoUrl;
-
-    img.onload = () => {
-      // Cabeçalho com logo e título centralizado
-      doc.addImage(img, 'PNG', 15, 10, 40, 15);
-      doc.setFontSize(22);
-      doc.setTextColor("#b38b00");
-      doc.text("Proposta de Consórcio", 105, 40, null, null, "center");
-
-      // Linha horizontal dourada
-      doc.setDrawColor("#b38b00");
-      doc.setLineWidth(0.7);
-      doc.line(15, 45, 195, 45);
-
-      // Corpo do documento
-      doc.setFontSize(12);
-      doc.setTextColor("#333333");
-      let y = 55;
-      const marginLeft = 15;
-      const marginRight = 195;
-
-      // Função para desenhar label esquerda e valor direita com destaque opcional
-      function textoParLinha(label, valor, yPos, destaque=false) {
-        if (destaque) {
-          doc.setFontSize(14);
-          doc.setFont(undefined, "bold");
-          doc.setTextColor("#b38b00");
-        } else {
-          doc.setFontSize(12);
-          doc.setFont(undefined, "normal");
-          doc.setTextColor("#333333");
-        }
-        doc.text(label, marginLeft, yPos);
-        doc.text(valor, marginRight, yPos, { align: "right" });
-      }
-
-      // Dados do cliente e proposta
-      textoParLinha("Número da Proposta:", numProposta, y);
-      y += 10;
-
-      textoParLinha("Cliente:", nomePdf.value.trim(), y);
-      y += 10;
-
-      textoParLinha("Telefone:", telPdf.value.trim(), y);
-      y += 10;
-
-      textoParLinha("Email:", emailPdf.value.trim(), y);
-      y += 15;
-
-      doc.setFontSize(12);
-      doc.setFont(undefined, "bold");
-      doc.setTextColor("#b38b00");
-      doc.text("Detalhes da Proposta", marginLeft, y);
-      y += 8;
-      doc.setDrawColor("#b38b00");
-      doc.setLineWidth(0.5);
-      doc.line(marginLeft, y, marginRight, y);
-      y += 10;
-
-      textoParLinha("Bem desejado:", bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1), y);
-      y += 10;
-
-      textoParLinha("Valor desejado:", valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), y);
-      y += 10;
-
-      const valorTaxa = valorSimulado * taxa;
-      const valorTotal = valorSimulado + valorTaxa;
-
-      textoParLinha("Taxa de administração:", `${(taxa*100).toFixed(0)}% (${valorTaxa.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})})`, y);
-      y += 10;
-
-      textoParLinha("Valor total a pagar:", valorTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), y, true);
-      y += 12;
-
-      textoParLinha("Número de parcelas:", maxParcelas.toString(), y);
-      y += 10;
-
-      const valorParcela = valorTotal / maxParcelas;
-      textoParLinha("Valor aproximado da parcela:", valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), y, true);
-      y += 15;
-
-      doc.setFont(undefined, "italic");
-      doc.setFontSize(10);
-      doc.setTextColor("#666666");
-      doc.text("Esta proposta é uma simulação e pode sofrer alterações conforme condições comerciais vigentes.", marginLeft, y);
-
-      doc.save(`Proposta_${numProposta}.pdf`);
-    };
-  }
 </script>
 
 </body>
