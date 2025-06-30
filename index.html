@@ -169,7 +169,7 @@
 
   <p class="info-text" id="info-parcelas"></p>
 
-  <button id="btnSimular" disabled>Simular</button>
+  <button id="btnSimular" disabled>Gerar proposta</button>
 
   <section id="resumoSimulacao" aria-live="polite"></section>
 
@@ -179,7 +179,7 @@
     <input id="nomePdf" type="text" placeholder="Nome completo" aria-label="Nome completo" />
     <input id="telPdf" type="tel" placeholder="Número de telefone" aria-label="Número de telefone" />
     <input id="emailPdf" type="email" placeholder="Digite seu e-mail" aria-label="Email" />
-    <button id="btnPdf">Gerar PDF da Proposta</button>
+    <button id="btnPdf" disabled>Gerar PDF da Proposta</button>
   </section>
 </main>
 
@@ -193,7 +193,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
-  // Funções do simulador mantidas do código anterior (não modifiquei aqui, só para foco no rodapé)
   const bemSelect = document.getElementById('bem');
   const valorInput = document.getElementById('valor');
   const infoParcelas = document.getElementById('info-parcelas');
@@ -266,84 +265,125 @@
     const valorTotal = valorSimulado + valorTaxa;
     const valorParcela = valorTotal / maxParcelas;
 
-    resumoSimulacao.innerHTML = `
-      <strong>Proposta Nº:</strong> ${numProposta}<br/>
-      <strong>Bem:</strong> ${bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1)}<br/>
-      <strong>Valor desejado:</strong> ${valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}<br/>
-      <strong>Taxa de administração:</strong> ${(taxa*100).toFixed(0)}% (${valorTaxa.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})})<br/>
-      <strong>Valor total:</strong> ${valorTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}<br/>
-      <strong>Número de parcelas:</strong> ${maxParcelas}<br/>
-      <strong>Valor aproximado da parcela:</strong> ${valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
-    `;
+    resumoSimulacao.innerHTML = `<strong>Gerando proposta para:</strong> ${bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1)} no valor de ${valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}.<br/>Preencha seus dados para baixar a proposta em PDF.`;
 
+    // Mostrar formulário para dados do PDF
     dadosPdfSection.style.display = "block";
-    btnPdf.disabled = false;
+
+    btnPdf.disabled = true;
+    nomePdf.value = telPdf.value = emailPdf.value = "";
+  });
+
+  // Habilita o botão PDF só se todos os dados estiverem preenchidos
+  [nomePdf, telPdf, emailPdf].forEach(input => {
+    input.addEventListener('input', () => {
+      btnPdf.disabled = !(nomePdf.value.trim() && telPdf.value.trim() && emailPdf.value.trim());
+    });
   });
 
   btnPdf.addEventListener('click', () => {
-    const nome = nomePdf.value.trim();
-    const tel = telPdf.value.trim();
-    const email = emailPdf.value.trim();
+    gerarPdf();
+  });
 
-    if (!nome || !tel || !email) {
-      alert("Por favor, preencha Nome completo, Número de telefone e Email para gerar o PDF.");
-      return;
-    }
-
+  async function gerarPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
+    // Logo para o PDF
+    const logoUrl = "https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png";
+
+    // Carregar imagem antes de gerar PDF para evitar problemas
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.src = 'https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png';
+    img.src = logoUrl;
 
     img.onload = () => {
+      // Cabeçalho com logo e título centralizado
       doc.addImage(img, 'PNG', 15, 10, 40, 15);
-      doc.setFontSize(18);
+      doc.setFontSize(22);
       doc.setTextColor("#b38b00");
       doc.text("Proposta de Consórcio", 105, 40, null, null, "center");
 
-      doc.setFontSize(12);
-      doc.setTextColor("#000");
-      let y = 50;
-      doc.text(`Número da Proposta: ${numProposta}`, 15, y); y += 8;
-      doc.text(`Nome: ${nome}`, 15, y); y += 8;
-      doc.text(`Telefone: ${tel}`, 15, y); y += 8;
-      doc.text(`Email: ${email}`, 15, y); y += 10;
+      // Linha horizontal dourada
+      doc.setDrawColor("#b38b00");
+      doc.setLineWidth(0.7);
+      doc.line(15, 45, 195, 45);
 
-      doc.text(`Bem: ${bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1)}`, 15, y); y += 8;
-      doc.text(`Valor Desejado: ${valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, y); y += 8;
+      // Corpo do documento
+      doc.setFontSize(12);
+      doc.setTextColor("#333333");
+      let y = 55;
+      const marginLeft = 15;
+      const marginRight = 195;
+
+      // Função para desenhar label esquerda e valor direita com destaque opcional
+      function textoParLinha(label, valor, yPos, destaque=false) {
+        if (destaque) {
+          doc.setFontSize(14);
+          doc.setFont(undefined, "bold");
+          doc.setTextColor("#b38b00");
+        } else {
+          doc.setFontSize(12);
+          doc.setFont(undefined, "normal");
+          doc.setTextColor("#333333");
+        }
+        doc.text(label, marginLeft, yPos);
+        doc.text(valor, marginRight, yPos, { align: "right" });
+      }
+
+      // Dados do cliente e proposta
+      textoParLinha("Número da Proposta:", numProposta, y);
+      y += 10;
+
+      textoParLinha("Cliente:", nomePdf.value.trim(), y);
+      y += 10;
+
+      textoParLinha("Telefone:", telPdf.value.trim(), y);
+      y += 10;
+
+      textoParLinha("Email:", emailPdf.value.trim(), y);
+      y += 15;
+
+      doc.setFontSize(12);
+      doc.setFont(undefined, "bold");
+      doc.setTextColor("#b38b00");
+      doc.text("Detalhes da Proposta", marginLeft, y);
+      y += 8;
+      doc.setDrawColor("#b38b00");
+      doc.setLineWidth(0.5);
+      doc.line(marginLeft, y, marginRight, y);
+      y += 10;
+
+      textoParLinha("Bem desejado:", bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1), y);
+      y += 10;
+
+      textoParLinha("Valor desejado:", valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), y);
+      y += 10;
+
       const valorTaxa = valorSimulado * taxa;
       const valorTotal = valorSimulado + valorTaxa;
-      doc.text(`Taxa de Administração: ${(taxa*100).toFixed(0)}% (${valorTaxa.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})})`, 15, y); y += 8;
-      doc.text(`Valor Total: ${valorTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, y); y += 8;
-      doc.text(`Número de Parcelas: ${maxParcelas}`, 15, y); y += 8;
+
+      textoParLinha("Taxa de administração:", `${(taxa*100).toFixed(0)}% (${valorTaxa.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})})`, y);
+      y += 10;
+
+      textoParLinha("Valor total a pagar:", valorTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), y, true);
+      y += 12;
+
+      textoParLinha("Número de parcelas:", maxParcelas.toString(), y);
+      y += 10;
+
       const valorParcela = valorTotal / maxParcelas;
-      doc.text(`Valor Aproximado da Parcela: ${valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, y);
+      textoParLinha("Valor aproximado da parcela:", valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), y, true);
+      y += 15;
+
+      doc.setFont(undefined, "italic");
+      doc.setFontSize(10);
+      doc.setTextColor("#666666");
+      doc.text("Esta proposta é uma simulação e pode sofrer alterações conforme condições comerciais vigentes.", marginLeft, y);
 
       doc.save(`Proposta_${numProposta}.pdf`);
     };
-
-    img.onerror = () => {
-      alert("Erro ao carregar a logo para o PDF.");
-    };
-  });
-
-  // Código para ocultar e mostrar o rodapé ao rolar a página
-  const footer = document.getElementById('footer');
-  let lastScroll = 0;
-
-  window.addEventListener('scroll', () => {
-    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    if (currentScroll > lastScroll && currentScroll > 100) {
-      // Rolando para baixo, oculta rodapé
-      footer.classList.add('hidden');
-    } else {
-      // Rolando para cima, mostra rodapé
-      footer.classList.remove('hidden');
-    }
-    lastScroll = currentScroll <= 0 ? 0 : currentScroll; // evita negativo
-  });
+  }
 </script>
 
 </body>
