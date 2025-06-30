@@ -105,99 +105,6 @@
   #dadosPdf input {
     margin-bottom: 20px;
   }
-
-  /* Chat popup - botão pequeno canto direito */
-  #chat-btn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    box-shadow: 0 0 12px #b38b00cc;
-    transition: box-shadow 0.3s ease;
-  }
-  #chat-btn:hover {
-    box-shadow: 0 0 20px #d2af00ff;
-  }
-  #chat-btn img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-  }
-
-  #chat-popup {
-    position: fixed;
-    bottom: 95px;
-    right: 25px;
-    width: 320px;
-    max-height: 480px;
-    background: #111;
-    border-radius: 10px;
-    box-shadow: 0 0 30px #b38b00cc;
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    font-size: 14px;
-    color: #ddd;
-  }
-  #chat-header {
-    background: #b38b00;
-    padding: 10px 15px;
-    font-weight: 700;
-    color: #000;
-  }
-  #chat-messages {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    background: #222;
-    font-size: 14px;
-    line-height: 1.4em;
-  }
-  .chat-message {
-    margin-bottom: 12px;
-    max-width: 90%;
-    padding: 8px 12px;
-    border-radius: 12px;
-  }
-  .bot-msg {
-    color: #f0e68c;
-    background: #4a3c00;
-    align-self: flex-start;
-  }
-  .user-msg {
-    color: #111;
-    background: #b38b00;
-    align-self: flex-end;
-    text-align: right;
-  }
-  #chat-options {
-    padding: 10px 15px;
-    background: #111;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-  }
-  #chat-options button {
-    background: #b38b00;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 14px;
-    color: #000;
-    font-weight: 700;
-    cursor: pointer;
-    flex: 1 1 auto;
-    min-width: 110px;
-    transition: background 0.3s ease;
-  }
-  #chat-options button:hover {
-    background: #d2af00;
-  }
 </style>
 </head>
 <body>
@@ -239,18 +146,6 @@
     <button id="btnPdf">Gerar PDF da Proposta</button>
   </section>
 </main>
-
-<!-- Botão chat pequeno -->
-<button id="chat-btn" aria-label="Abrir chat de atendimento">
-  <img src="https://i.postimg.cc/L8q1N8pX/d7be4f1f-7489-44e5-812b-51da7469181f.jpg" alt="Ícone chat" />
-</button>
-
-<!-- Popup do chat -->
-<div id="chat-popup" role="dialog" aria-modal="true" aria-labelledby="chat-header" >
-  <div id="chat-header">Atendimento Raros Capital</div>
-  <div id="chat-messages" tabindex="0" aria-live="polite" aria-atomic="false"></div>
-  <div id="chat-options"></div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
@@ -366,165 +261,40 @@
     // Logo
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.src = "https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png";
+    img.src = 'https://i.postimg.cc/6qN8NR7H/Sem-t-tulo.png';
 
     img.onload = () => {
-      doc.addImage(img, 'PNG', 15, 10, 50, 15);
-      doc.setFontSize(20);
-      doc.setTextColor(179, 139, 0);
-      doc.text("Raros Capital - Proposta de Consórcio", 15, 40);
+      doc.addImage(img, 'PNG', 15, 10, 40, 15);
+      doc.setFontSize(18);
+      doc.setTextColor("#b38b00");
+      doc.text("Proposta de Consórcio", 105, 40, null, null, "center");
 
       doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Proposta Nº: ${numProposta}`, 15, 55);
-      doc.text(`Nome: ${nome}`, 15, 65);
-      doc.text(`Telefone: ${tel}`, 15, 75);
-      doc.text(`Email: ${email}`, 15, 85);
+      doc.setTextColor("#000");
+      let y = 50;
+      doc.text(`Número da Proposta: ${numProposta}`, 15, y); y += 8;
+      doc.text(`Nome: ${nome}`, 15, y); y += 8;
+      doc.text(`Telefone: ${tel}`, 15, y); y += 8;
+      doc.text(`Email: ${email}`, 15, y); y += 10;
 
-      doc.text(`Bem desejado: ${bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1)}`, 15, 100);
-      doc.text(`Valor desejado: ${valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, 110);
-      doc.text(`Taxa de administração: ${(taxa*100).toFixed(0)}%`, 15, 120);
-      doc.text(`Número de parcelas: ${maxParcelas}`, 15, 130);
+      doc.text(`Bem: ${bemSelecionado.charAt(0).toUpperCase() + bemSelecionado.slice(1)}`, 15, y); y += 8;
+      doc.text(`Valor Desejado: ${valorSimulado.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, y); y += 8;
       const valorTaxa = valorSimulado * taxa;
       const valorTotal = valorSimulado + valorTaxa;
+      doc.text(`Taxa de Administração: ${(taxa*100).toFixed(0)}% (${valorTaxa.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})})`, 15, y); y += 8;
+      doc.text(`Valor Total: ${valorTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, y); y += 8;
+      doc.text(`Número de Parcelas: ${maxParcelas}`, 15, y); y += 8;
       const valorParcela = valorTotal / maxParcelas;
-      doc.text(`Valor da taxa: ${valorTaxa.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, 140);
-      doc.text(`Valor total: ${valorTotal.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, 150);
-      doc.text(`Valor aproximado da parcela: ${valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, 160);
-
-      doc.setTextColor(150);
-      doc.setFontSize(10);
-      doc.text("Raros Capital - Contato: contato@raroscapital.com.br | Telefone: (00) 0000-0000", 15, 280);
+      doc.text(`Valor Aproximado da Parcela: ${valorParcela.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}`, 15, y);
 
       doc.save(`Proposta_${numProposta}.pdf`);
     };
+
+    img.onerror = () => {
+      alert("Erro ao carregar a logo para o PDF.");
+    };
   });
-
-  // CHAT BOT
-  const chatBtn = document.getElementById('chat-btn');
-  const chatPopup = document.getElementById('chat-popup');
-  const chatMessages = document.getElementById('chat-messages');
-  const chatOptions = document.getElementById('chat-options');
-
-  chatBtn.addEventListener('click', () => {
-    if (chatPopup.style.display === 'flex') {
-      chatPopup.style.display = 'none';
-      clearChat();
-    } else {
-      chatPopup.style.display = 'flex';
-      startChat();
-    }
-  });
-
-  function clearChat(){
-    chatMessages.innerHTML = "";
-    chatOptions.innerHTML = "";
-  }
-
-  function startChat(){
-    clearChat();
-    appendBotMessage("Olá! Bem-vindo à Raros Capital. Como podemos ajudar você hoje?");
-    setTimeout(() => {
-      showMainOptions();
-    }, 800);
-  }
-
-  function appendBotMessage(text){
-    const div = document.createElement('div');
-    div.className = 'chat-message bot-msg';
-    div.style.whiteSpace = "pre-wrap";
-    div.style.maxWidth = "90%";
-    div.textContent = text;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  function appendUserMessage(text){
-    const div = document.createElement('div');
-    div.className = 'chat-message user-msg';
-    div.style.maxWidth = "90%";
-    div.textContent = text;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-
-  function showMainOptions(){
-    chatOptions.innerHTML = `
-      <button data-option="consorcio">Simular Consórcio</button>
-      <button data-option="administradora">Conhecer a Administradora</button>
-      <button data-option="raros">Conhecer Raros Capital</button>
-      <button data-option="atendente">Falar com Atendente</button>
-    `;
-  }
-
-  chatOptions.addEventListener('click', e => {
-    if (e.target.tagName !== 'BUTTON') return;
-    const option = e.target.getAttribute('data-option');
-    const text = e.target.textContent;
-    appendUserMessage(text);
-    chatOptions.innerHTML = "";
-    handleOption(option);
-  });
-
-  function handleOption(option){
-    switch(option){
-      case 'consorcio':
-        appendBotMessage(
-          "Ótimo! Temos consórcios para Automóveis e Imóveis.\n" +
-          "Escolha uma opção abaixo para saber mais."
-        );
-        chatOptions.innerHTML = `
-          <button data-option="auto">Consórcio Automóvel</button>
-          <button data-option="imovel">Consórcio Imóvel</button>
-          <button data-option="voltar">Voltar</button>
-        `;
-        break;
-      case 'administradora':
-        appendBotMessage("Conheça a administradora Boca Mafra Premium no Instagram:");
-        chatOptions.innerHTML = `<button data-link="https://www.instagram.com/bocamafrapremium/" target="_blank">Abrir Instagram</button><button data-option="voltar">Voltar</button>`;
-        break;
-      case 'raros':
-        appendBotMessage("Quer conhecer mais sobre a Raros Capital? Veja nosso Instagram:");
-        chatOptions.innerHTML = `<button data-link="https://www.instagram.com/raroscapital_/" target="_blank">Abrir Instagram</button><button data-option="voltar">Voltar</button>`;
-        break;
-      case 'atendente':
-        appendBotMessage("Para falar com um atendente, por favor envie um e-mail para contato@raroscapital.com.br ou ligue (00) 0000-0000.");
-        chatOptions.innerHTML = `<button data-option="voltar">Voltar</button>`;
-        break;
-      case 'auto':
-        appendBotMessage(
-          "Nosso consórcio de Automóveis oferece taxas competitivas de 16%, " + 
-          "com parcelas em até 84 vezes e valores entre R$65.000,00 e R$130.000,00.\n" +
-          "Se desejar, utilize nosso simulador para calcular sua proposta no site."
-        );
-        chatOptions.innerHTML = `<button data-option="voltar">Voltar</button>`;
-        break;
-      case 'imovel':
-        appendBotMessage(
-          "Nosso consórcio de Imóveis oferece taxas de 22%, " +
-          "parcelas em até 220 vezes e valores entre R$200.000,00 e R$500.000,00.\n" +
-          "Você pode simular sua proposta usando o simulador acima."
-        );
-        chatOptions.innerHTML = `<button data-option="voltar">Voltar</button>`;
-        break;
-      case 'voltar':
-        appendBotMessage("Como podemos ajudar você hoje?");
-        setTimeout(showMainOptions, 500);
-        break;
-      default:
-        // Links abrir no instagram
-        if(option.startsWith('http') || e.target.hasAttribute('data-link')){
-          const link = e.target.getAttribute('data-link');
-          window.open(link, '_blank');
-          appendBotMessage("Abrindo link...");
-          setTimeout(showMainOptions, 1000);
-        } else {
-          appendBotMessage("Desculpe, não entendi. Por favor, escolha uma opção.");
-          showMainOptions();
-        }
-        break;
-    }
-  }
 </script>
+
 </body>
 </html>
