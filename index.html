@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Raros Capital</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #000000;
+      color: #ffffff;
+    }
+
+    header {
+      background: #000000;
+      color: #d4af37;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 2px solid #d4af37;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    section {
+      margin-bottom: 30px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #d4af37;
+      background: #000;
+      color: #fff;
+      border-radius: 5px;
+    }
+
+    button {
+      background: #d4af37;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      border: 1px solid #d4af37;
+      padding: 10px;
+      height: 200px;
+      overflow-y: auto;
+      background: #111;
+      border-radius: 5px;
+    }
+
+    .message {
+      margin: 5px 0;
+    }
+
+    .bot {
+      color: #d4af37;
+      font-weight: bold;
+    }
+
+    .user {
+      color: #ffffff;
+    }
+
+    h2 {
+      color: #d4af37;
+    }
+
+    #cadastro-ok {
+      color: #00ff99;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Raros Capital</h1>
+    <p>Consórcios inteligentes para você conquistar seu bem!</p>
+  </header>
+
+  <main>
+    <!-- Cadastro -->
+    <section>
+      <h2>Cadastro</h2>
+      <input id="nome" placeholder="Seu nome" />
+      <input id="email" placeholder="Seu e-mail" type="email" />
+      <input id="telefone" placeholder="Seu telefone" />
+      <button onclick="cadastrar()">Cadastrar</button>
+      <p id="cadastro-ok" style="display: none;">Cadastro realizado com sucesso!</p>
+    </section>
+
+    <!-- Simulador -->
+    <section>
+      <h2>Simule seu Consórcio</h2>
+      <input id="valorCarta" placeholder="Valor da carta (R$)" type="number" />
+      <input id="parcelas" placeholder="Número de parcelas" type="number" />
+      <button onclick="simular()">Simular</button>
+      <p id="resultadoSimulacao"></p>
+    </section>
+
+    <!-- Chat -->
+    <section>
+      <h2>Fale com a gente</h2>
+      <div class="chat-box" id="chatBox"></div>
+      <input id="mensagem" placeholder="Digite sua mensagem" onkeydown="if(event.key==='Enter'){enviarMensagem()}" />
+      <button onclick="enviarMensagem()">Enviar</button>
+    </section>
+  </main>
+
+  <script>
+    function cadastrar() {
+      const nome = document.getElementById('nome').value;
+      const email = document.getElementById('email').value;
+      const telefone = document.getElementById('telefone').value;
+      if (nome && email) {
+        document.getElementById('cadastro-ok').style.display = 'block';
+      }
+    }
+
+    function simular() {
+      const valor = parseFloat(document.getElementById('valorCarta').value);
+      const parcelas = parseInt(document.getElementById('parcelas').value);
+      if (valor && parcelas) {
+        const mensal = (valor / parcelas).toFixed(2);
+        document.getElementById('resultadoSimulacao').innerText =
+          `Parcela estimada: R$ ${mensal}`;
+      }
+    }
+
+    function enviarMensagem() {
+      const chatBox = document.getElementById('chatBox');
+      const msg = document.getElementById('mensagem').value;
+      if (!msg) return;
+
+      const userMsg = `<div class="message user"><strong>Você:</strong> ${msg}</div>`;
+      chatBox.innerHTML += userMsg;
+
+      setTimeout(() => {
+        const resposta = gerarResposta(msg);
+        const botMsg = `<div class="message bot"><strong>Raros Bot:</strong> ${resposta}</div>`;
+        chatBox.innerHTML += botMsg;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 500);
+
+      document.getElementById('mensagem').value = '';
+    }
+
+    function gerarResposta(msg) {
+      const texto = msg.toLowerCase();
+      if (texto.includes("parcelas") || texto.includes("preço")) {
+        return "Você pode simular um plano informando o valor e a quantidade de parcelas acima.";
+      }
+      if (texto.includes("falar") || texto.includes("consultor")) {
+        return "Um de nossos especialistas entrará em contato pelo e-mail ou telefone cadastrado.";
+      }
+      return "Sou o assistente da Raros Capital. Posso te ajudar com dúvidas sobre consórcio!";
+    }
+  </script>
+</body>
+</html>
